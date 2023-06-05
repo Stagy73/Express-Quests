@@ -137,6 +137,27 @@ app.put("/api/movies/:id", validateMovie, (req, res) => {
       res.status(500).send("Error updating movie");
     });
 });
+// Movie routes
+app.get("/api/movies", (req, res) => {
+  const { max_duration } = req.query;
+
+  let query = "SELECT * FROM movies";
+
+  if (max_duration) {
+    const duration = parseInt(max_duration);
+    query += ` WHERE duration <= ${duration}`;
+  }
+
+  database
+    .query(query)
+    .then(([movies]) => {
+      res.json(movies);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error retrieving data from the database");
+    });
+});
 
 // User routes
 app.get("/api/users", (req, res) => {
@@ -241,6 +262,30 @@ app.delete("/api/movies/:id", (req, res) => {
     .catch((err) => {
       console.error(err);
       res.status(500).send("Error deleting movie");
+    });
+});
+// User routes
+app.get("/api/users", (req, res) => {
+  const { language, city } = req.query;
+
+  let query = "SELECT * FROM users";
+
+  if (language) {
+    query += ` WHERE language = '${language}'`;
+  }
+
+  if (city) {
+    query += language ? ` AND city = '${city}'` : ` WHERE city = '${city}'`;
+  }
+
+  database
+    .query(query)
+    .then(([users]) => {
+      res.json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error retrieving data from the database");
     });
 });
 
