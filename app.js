@@ -206,6 +206,43 @@ app.put("/api/users/:id", validateUser, (req, res) => {
       res.status(500).send("Error updating user");
     });
 });
+// User routes
+app.delete("/api/users/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+
+  if (isNaN(id)) {
+    return res.status(400).send("Invalid user ID");
+  }
+
+  database
+    .query("DELETE FROM users WHERE id = ?", [id])
+    .then(() => {
+      res.status(200).send("User deleted successfully");
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error deleting user");
+    });
+});
+
+// Movie routes
+app.delete("/api/movies/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+
+  if (isNaN(id)) {
+    return res.status(400).send("Invalid movie ID");
+  }
+
+  database
+    .query("DELETE FROM movies WHERE id = ?", [id])
+    .then(() => {
+      res.status(200).send("Movie deleted successfully");
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error deleting movie");
+    });
+});
 
 app.listen(port, (err) => {
   if (err) {
