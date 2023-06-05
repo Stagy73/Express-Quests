@@ -82,7 +82,9 @@ app.get("/api/movies", (req, res) => {
 
 app.get("/api/movies/:id", (req, res) => {
   const id = parseInt(req.params.id);
-
+  if (isNaN(id)) {
+    return res.status(400).send("Invalid movie ID");
+  }
   database
     .query("SELECT * FROM movies WHERE id = ?", [id])
     .then(([movies]) => {
